@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "19321283139",
+    "project_id": "relocationapp-87e1b",
+    "storage_bucket": "relocationapp-87e1b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19321283139:android:80a29b2cf19a447b8c6af6",
+        "android_client_info": {
+          "package_name": "com.example.relocationapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8mOAUXZJckm4CuPrX6vmRbsY3xRDf1ok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
