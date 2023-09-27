@@ -176,37 +176,6 @@ fun Date.formatToDisplayDate(): String {
     val sdf = SimpleDateFormat("dd/MMMM/yyyy", Locale.getDefault())
     return sdf.format(this)
 }
-
-//@Composable
-//fun CustomDatePicker(
-//    selectedDate: Date?,
-//    onDateSelected: (Date) -> Unit
-//) {
-//    val calendar = Calendar.getInstance()
-//    val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-//        calendar.set(Calendar.YEAR, year)
-//        calendar.set(Calendar.MONTH, month)
-//        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-//        onDateSelected(calendar.time)
-//    }
-//    val context = LocalContext.current
-//    TextButton(
-//        onClick = {
-//            val year = calendar.get(Calendar.YEAR)
-//            val month = calendar.get(Calendar.MONTH)
-//            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-//            DatePickerDialog(context, dateSetListener, year, month, dayOfMonth).show()
-//        },
-//        modifier = Modifier
-//            .padding(bottom = 16.dp)
-//            .border(1.dp, Color.Gray, shape = RoundedCornerShape(10))
-//            .height(50.dp)
-//            .fillMaxWidth()
-//    ) {
-//        Text(text = selectedDate?.toString() ?: "Select Date")
-//    }
-//}
-
 @Composable
 fun MapPickerDialog(
     onPlaceSelected: (String) -> Unit,
