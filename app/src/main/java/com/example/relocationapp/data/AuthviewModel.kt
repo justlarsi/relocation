@@ -54,7 +54,6 @@ class AuthviewModel(var navController: NavController, var context: MainActivity)
         }
 
     }
-    //    if you want the code to take you to anther page use navigation...navcontroller
     fun login(email: String, pass: String){
         if (email.isBlank() || pass.isBlank()) {
             Toast.makeText(context, "Please enter both email and password", Toast.LENGTH_LONG).show()
@@ -75,7 +74,6 @@ class AuthviewModel(var navController: NavController, var context: MainActivity)
         mAuth.signOut()
         navController.navigate(ROUTE_LOGIN)
     }
-    //    Function to check if user is logged in
     fun loggedin():Boolean{
         return mAuth.currentUser!=null
     }

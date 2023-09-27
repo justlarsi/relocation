@@ -63,7 +63,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("androidx.compose.material3:material3:1.1.1")
+    implementation("androidx.compose.material3:material3:1.1.2")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.3")
     implementation ("androidx.navigation:navigation-compose:2.7.3")
     implementation("com.google.firebase:firebase-auth:22.1.2")

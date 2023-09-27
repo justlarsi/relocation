@@ -84,9 +84,9 @@ fun LoginScreen(navController: NavHostController, authviewModel: AuthviewModel) 
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.logo), // Replace with your image resource
+            painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
-            modifier = Modifier.size(100.dp) // Adjust the size as needed
+            modifier = Modifier.size(100.dp)
         )
         Text(
             text = if (isSignUp) "Sign Up" else "Log In",
@@ -192,124 +192,3 @@ fun LoginScreen(navController: NavHostController, authviewModel: AuthviewModel) 
         }
     }
 }
-
-//        if (isSignUp) {
-//            OutlinedTextField(
-//                value = name,
-//                onValueChange = { name = it },
-//                label = { Text("Name") },
-//                keyboardOptions = KeyboardOptions.Default.copy(
-//                    keyboardType = KeyboardType.Text,
-//                    imeAction = ImeAction.Next
-//                ),
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(bottom = 16.dp)
-//            )
-//
-//            OutlinedTextField(
-//                value = email,
-//                onValueChange = { email = it },
-//                label = { Text("Email") },
-//                keyboardOptions = KeyboardOptions.Default.copy(
-//                    keyboardType = KeyboardType.Email,
-//                    imeAction = ImeAction.Next
-//                ),
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(bottom = 16.dp)
-//            )
-//
-//            OutlinedTextField(
-//                value = password,
-//                onValueChange = { password = it },
-//                label = { Text("Password") },
-//                keyboardOptions = KeyboardOptions.Default.copy(
-//                    keyboardType = KeyboardType.Password,
-//                    imeAction = ImeAction.Next
-//                ),
-//                visualTransformation = PasswordVisualTransformation(),
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(bottom = 16.dp)
-//            )
-//
-//            OutlinedTextField(
-//                value = confirmPassword,
-//                onValueChange = { confirmPassword = it },
-//                label = { Text("Confirm Password") },
-//                keyboardOptions = KeyboardOptions.Default.copy(
-//                    keyboardType = KeyboardType.Password,
-//                    imeAction = ImeAction.Done
-//                ),
-//                visualTransformation = PasswordVisualTransformation(),
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(bottom = 16.dp)
-//            )
-
-//        } else {
-//            OutlinedTextField(
-//                value = email,
-//                onValueChange = { email = it },
-//                label = { Text("Email") },
-//                keyboardOptions = KeyboardOptions.Default.copy(
-//                    keyboardType = KeyboardType.Email,
-//                    imeAction = ImeAction.Next
-//                ),
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(bottom = 16.dp)
-//            )
-//
-//            OutlinedTextField(
-//                value = password,
-//                onValueChange = { password = it },
-//                label = { Text("Password") },
-//                keyboardOptions = KeyboardOptions.Default.copy(
-//                    keyboardType = KeyboardType.Password,
-//                    imeAction = ImeAction.Done
-//                ),
-//                visualTransformation = PasswordVisualTransformation(),
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(bottom = 16.dp)
-//            )
-//        }
-//
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.spacedBy(8.dp)
-//        ) {
-//            Button(
-//                onClick = {
-//                    if (isSignUp) {
-//                        authviewModel.signup(name,email,password,confirmPassword)
-//                    } else {
-//                        authviewModel.login(email,password)
-//                    }
-//                },
-//                modifier = Modifier
-//                    .weight(1f)
-//            ) {
-//                Text(text = if (isSignUp) "Sign Up" else "Log In")
-//            }
-//        }
-//
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.spacedBy(8.dp),
-//            modifier = Modifier
-//                .padding(top = 16.dp)
-//        ) {
-//            Text(text = if (isSignUp) "Already have an account?" else "Don't have an account?")
-//            TextButton(
-//                onClick = {
-//                    isSignUp = !isSignUp
-//                }
-//            ) {
-//                Text(text = if (isSignUp) "Log In" else "Sign Up")
-//            }
-//        }
-//    }
-//}

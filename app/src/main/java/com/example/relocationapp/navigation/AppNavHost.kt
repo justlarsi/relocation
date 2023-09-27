@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.relocationapp.data.AuthviewModel
 import com.example.relocationapp.data.FormViewModel
+import com.example.relocationapp.ui.theme.screens.aboutus.AboutUsScreen
 import com.example.relocationapp.ui.theme.screens.details.Detailsscreen
 import com.example.relocationapp.ui.theme.screens.home.MoveDetailsScreen
 import com.example.relocationapp.ui.theme.screens.login.LoginScreen
@@ -30,7 +31,7 @@ fun AppNavHost(
         startDestination = ROUTE_SPLASH
     ) {
         composable(ROUTE_HOME) {
-            MoveDetailsScreen(navController,formViewModel)
+            MoveDetailsScreen(navController,formViewModel,authviewModel)
         }
         composable(ROUTE_SPLASH){
             SplashScreen(navController)
@@ -42,5 +43,8 @@ fun AppNavHost(
         composable(ROUTE_DETAILS){
             Detailsscreen(navController)
         }
+        composable(ROUTE_ABOUTUS){
+            AboutUsScreen(navController)
     }
+}
 }

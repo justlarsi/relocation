@@ -9,6 +9,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,32 +27,119 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.relocationapp.R
+import com.example.relocationapp.data.AuthviewModel
 import com.example.relocationapp.data.FormViewModel
+import com.example.relocationapp.navigation.ROUTE_ABOUTUS
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun TopBar() {
-    Surface(
-        color = Color.White,
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Row(
+fun DropdownMenuItem(
+    label: String,
+    onClick: () -> Unit
+) {
+    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp)
-                .padding(horizontal = 8.dp), // Add horizontal padding
-            verticalAlignment = Alignment.CenterVertically
+                .clickable(onClick = onClick)
+                .padding(16.dp)
+        ) {
+            Text(
+                text = label,
+                style = TextStyle(fontSize = 16.sp),
+                color = Color.Black
+            )
+        }
+    }
+}
+@Composable
+fun TopBar(
+    authViewModel: AuthviewModel,
+    navController: NavHostController
+) {
+    var aboutUsExpanded by remember { mutableStateOf(false) }
+    var logoutExpanded by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .padding(horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.clickable {
+                aboutUsExpanded = !aboutUsExpanded
+            }
         ) {
             Image(
                 painter = painterResource(R.drawable.logo),
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .size(48.dp) // Adjust the size of the logo
+                    .size(48.dp)
             )
+
+            if (aboutUsExpanded) {
+                DropdownMenu(
+                    expanded = aboutUsExpanded,
+                    onDismissRequest = { aboutUsExpanded = false },
+                    modifier = Modifier
+                        .width(IntrinsicSize.Max)
+                        .padding(4.dp)
+                ) {
+                    DropdownMenuItem(
+                        label = "About Us",
+                        onClick = {
+                            aboutUsExpanded = false
+                            navController.navigate(ROUTE_ABOUTUS)
+                        }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.clickable {
+                logoutExpanded = !logoutExpanded
+            }
+        ) {
+            IconButton(
+                onClick = { logoutExpanded = !logoutExpanded },
+                modifier = Modifier.size(48.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "Account",
+                    modifier = Modifier.size(56.dp)
+                )
+            }
+
+            if (logoutExpanded) {
+                DropdownMenu(
+                    expanded = logoutExpanded,
+                    onDismissRequest = { logoutExpanded = false },
+                    modifier = Modifier
+                        .width(IntrinsicSize.Max)
+                        .padding(4.dp)
+                ) {
+                    DropdownMenuItem(
+                        label = "Logout",
+                        onClick = {
+                            authViewModel.logout()
+                            logoutExpanded = false
+                        }
+                    )
+                }
+            }
         }
     }
 }
+
 @Composable
 fun CustomDatePicker(
     selectedDate: Date?,
@@ -67,7 +158,9 @@ fun CustomDatePicker(
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
             val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-            DatePickerDialog(context, dateSetListener, year, month, dayOfMonth).show()
+            val datePickerDialog = DatePickerDialog(context, dateSetListener, year, month, dayOfMonth)
+//            datePickerDialog.datePicker.maxDate = System.currentTimeMillis() // Optional: Set max date to prevent selecting future dates
+            datePickerDialog.show()
         },
         modifier = Modifier
             .padding(bottom = 16.dp)
@@ -75,9 +168,44 @@ fun CustomDatePicker(
             .height(50.dp)
             .fillMaxWidth()
     ) {
-        Text(text = selectedDate?.toString() ?: "Select Date")
+        Text(text = selectedDate?.formatToDisplayDate() ?: "Select Date")
     }
 }
+
+fun Date.formatToDisplayDate(): String {
+    val sdf = SimpleDateFormat("dd/MMMM/yyyy", Locale.getDefault())
+    return sdf.format(this)
+}
+
+//@Composable
+//fun CustomDatePicker(
+//    selectedDate: Date?,
+//    onDateSelected: (Date) -> Unit
+//) {
+//    val calendar = Calendar.getInstance()
+//    val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+//        calendar.set(Calendar.YEAR, year)
+//        calendar.set(Calendar.MONTH, month)
+//        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+//        onDateSelected(calendar.time)
+//    }
+//    val context = LocalContext.current
+//    TextButton(
+//        onClick = {
+//            val year = calendar.get(Calendar.YEAR)
+//            val month = calendar.get(Calendar.MONTH)
+//            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+//            DatePickerDialog(context, dateSetListener, year, month, dayOfMonth).show()
+//        },
+//        modifier = Modifier
+//            .padding(bottom = 16.dp)
+//            .border(1.dp, Color.Gray, shape = RoundedCornerShape(10))
+//            .height(50.dp)
+//            .fillMaxWidth()
+//    ) {
+//        Text(text = selectedDate?.toString() ?: "Select Date")
+//    }
+//}
 
 @Composable
 fun MapPickerDialog(
@@ -103,7 +231,6 @@ fun MapPickerDialog(
     ) {
         TextButton(
             onClick = {
-                // Simulate selecting a location
                 onPlaceSelected("Selected Location")
                 onDismiss()
             }
@@ -138,8 +265,8 @@ fun OutlinedDropdown(
     ) {
         BasicTextField(
             value = if (hasSelection) options[selectedIndex] else "Type of Vehicle",
-            onValueChange = { /* Nothing to do here */ },
-            textStyle = TextStyle(color = Color.Black), // Ensure text color is visible
+            onValueChange = {},
+            textStyle = TextStyle(color = Color.Black),
             readOnly = true,
             decorationBox = { innerTextField ->
                 Box(
@@ -165,7 +292,7 @@ fun OutlinedDropdown(
                             selectedIndex = index
                             onValueChange(option)
                             expanded = false
-                            hasSelection = true // Update the state
+                            hasSelection = true
                         }
                         .padding(8.dp)
                 ) {
@@ -176,7 +303,7 @@ fun OutlinedDropdown(
     }
 }
 @Composable
-fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewModel) {
+fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewModel,authViewModel: AuthviewModel) {
     var pickupLocation by remember { mutableStateOf("") }
     var dropOffLocation by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf<Date?>(null) }
@@ -202,11 +329,12 @@ fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewMo
             .fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.back), // Replace with your image resource
-            contentDescription = null, // Provide a content description if needed
+            painter = painterResource(id = R.drawable.back),
+            contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
+        TopBar(authViewModel,navController)
 
         Column(
             modifier = Modifier
@@ -219,7 +347,7 @@ fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewMo
                 painter = painterResource(R.drawable.logo),
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .size(100.dp) // Adjust the size of the logo
+                    .size(100.dp)
             )
             Text(
                 text = "Tell us more about your move",
