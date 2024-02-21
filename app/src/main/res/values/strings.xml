@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Movers</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="web_client_id">19321283139-vml0qineeb42a8rtsjp6el4oml3tfi6g.apps.googleusercontent.com</string>
 </resources>
