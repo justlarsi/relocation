@@ -22,6 +22,7 @@ fun AppNavHost(
     startDestination:String= ROUTE_SPLASH,
     authviewModel: AuthviewModel,
     formViewModel: FormViewModel,
+    googleClientId: String,
 )
 {
 
@@ -38,7 +39,7 @@ fun AppNavHost(
         }
 
         composable(ROUTE_LOGIN) {
-            LoginScreen(navController,authviewModel)
+            LoginScreen(navController,authviewModel,googleClientId)
         }
         composable(ROUTE_DETAILS){
             Detailsscreen(navController)

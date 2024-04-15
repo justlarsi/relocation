@@ -1,4 +1,8 @@
 package com.example.relocationapp.ui.theme.screens.login
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +44,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.relocationapp.R
 import com.example.relocationapp.data.AuthviewModel
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.ui.platform.LocalContext
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+
 //import androidx.compose.material3.TextButtonDefaults
 
 
@@ -66,12 +77,17 @@ fun OutlinedTextFieldWithIcon(
     )
 }
 @Composable
-fun LoginScreen(navController: NavHostController, authviewModel: AuthviewModel)  {
+fun LoginScreen(
+    navController: NavHostController,
+    authviewModel: AuthviewModel,
+    googleClientId: String
+)  {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     var isSignUp by remember { mutableStateOf(false) }
 
@@ -189,6 +205,39 @@ fun LoginScreen(navController: NavHostController, authviewModel: AuthviewModel) 
 //            colors = TextButtonDefaults.textButtonColors(contentColor = darkGreen)
         ) {
             Text(text = if (isSignUp) "Log In" else "Sign Up")
+        }
+
+        val googleSignInLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                if (account != null) {
+                    val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                    authviewModel.signInWithGoogle(credential)
+                } else {
+                    Toast.makeText(context, "Sign-in failed.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: ApiException) {
+                val message = "Sign-in error. Please try again."
+                Log.e("SignIn", "Exception during Google sign-in", e)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+        Button(
+            onClick = {
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(googleClientId)
+                    .requestEmail()
+                    .build()
+                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                val signInIntent = googleSignInClient.signInIntent
+                googleSignInLauncher.launch(signInIntent)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+        ) {
+            Text(text = "Sign in with Google")
         }
     }
 }

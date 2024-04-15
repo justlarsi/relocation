@@ -9,12 +9,14 @@ import com.example.relocationapp.MainActivity
 import com.example.relocationapp.modules.User
 import com.example.relocationapp.navigation.ROUTE_HOME
 import com.example.relocationapp.navigation.ROUTE_LOGIN
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.auth.GoogleAuthProvider
 
-class AuthviewModel(var navController: NavController, var context: MainActivity){
-    var mAuth:FirebaseAuth
-    val progress:ProgressDialog
+class AuthviewModel(private var navController: NavController, private var context: MainActivity){
+    private var mAuth:FirebaseAuth
+    private val progress:ProgressDialog
     init {
         mAuth= FirebaseAuth.getInstance()
         progress=ProgressDialog(context)
@@ -73,8 +75,23 @@ class AuthviewModel(var navController: NavController, var context: MainActivity)
     fun logout(){
         mAuth.signOut()
         navController.navigate(ROUTE_LOGIN)
+        Toast.makeText(context,"logged out",Toast.LENGTH_LONG).show()
     }
     fun loggedin():Boolean{
         return mAuth.currentUser!=null
+    }
+    fun signInWithGoogle(credential: AuthCredential) {
+        mAuth.signInWithCredential(credential).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val user = mAuth.currentUser
+                if (user != null) {
+                    navController.navigate(ROUTE_HOME)
+                } else {
+                    Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(context, "Google sign-in failed", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
