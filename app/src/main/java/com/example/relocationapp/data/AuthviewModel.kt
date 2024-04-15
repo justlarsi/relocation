@@ -64,7 +64,7 @@ class AuthviewModel(private var navController: NavController, private var contex
 //        progress.show()
         mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
             if(it.isSuccessful)  {
-                Toast.makeText(context,"logged in",Toast.LENGTH_LONG).show()
+                Toast.makeText(context,"logged in as ${mAuth.currentUser!!.displayName}",Toast.LENGTH_LONG).show()
                 navController.navigate(ROUTE_HOME)
             }else{
                 Toast.makeText(context,"${it.exception!!.message}",Toast.LENGTH_LONG).show()
@@ -85,6 +85,7 @@ class AuthviewModel(private var navController: NavController, private var contex
             if (task.isSuccessful) {
                 val user = mAuth.currentUser
                 if (user != null) {
+                    Toast.makeText(context,"logged in as ${mAuth.currentUser!!.displayName}",Toast.LENGTH_LONG).show()
                     navController.navigate(ROUTE_HOME)
                 } else {
                     Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
