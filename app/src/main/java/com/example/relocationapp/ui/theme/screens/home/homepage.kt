@@ -26,12 +26,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.relocationapp.MainActivity
 import com.example.relocationapp.R
 import com.example.relocationapp.data.AuthviewModel
 import com.example.relocationapp.data.FormViewModel
 import com.example.relocationapp.navigation.ROUTE_ABOUTUS
 import java.text.SimpleDateFormat
 import java.util.*
+import com.google.android.libraries.places.api.Places
+
+
+
 
 @Composable
 fun DropdownMenuItem(
@@ -176,46 +181,7 @@ fun Date.formatToDisplayDate(): String {
     val sdf = SimpleDateFormat("dd/MMMM/yyyy", Locale.getDefault())
     return sdf.format(this)
 }
-@Composable
-fun MapPickerDialog(
-    onPlaceSelected: (String) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val context = LocalContext.current
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("Google Maps View", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        TextButton(
-            onClick = {
-                onPlaceSelected("Selected Location")
-                onDismiss()
-            }
-        ) {
-            Text(text = "Select")
-        }
-
-        TextButton(
-            onClick = {
-                onDismiss()
-            }
-        ) {
-            Text(text = "Cancel")
-        }
-    }
-}
 
 @Composable
 fun OutlinedDropdown(
@@ -272,30 +238,21 @@ fun OutlinedDropdown(
     }
 }
 @Composable
-fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewModel,authViewModel: AuthviewModel) {
+fun MoveDetailsScreen(
+    navController: NavHostController,
+    formViewModel: FormViewModel,
+    authViewModel: AuthviewModel,
+    mainActivity: MainActivity // Accept MainActivity instance
+) {
     var pickupLocation by remember { mutableStateOf("") }
     var dropOffLocation by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf<Date?>(null) }
     val vehicleTypes = listOf("Pickup truck", "Lorry", "Motorbike", "Car", "Trailer")
     var selectedVehicleType by remember { mutableStateOf(vehicleTypes[0]) }
-    val options by remember { mutableStateOf(vehicleTypes) }
-    var selectedOption by remember { mutableStateOf(options[0]) }
-    var isPickingPickupLocation by remember { mutableStateOf(false) }
-    var isPickingDropOffLocation by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    val darkGreen = Color(0xFF006400)
 
-    val onPlaceSelected: (String) -> Unit = { placeName ->
-        if (isPickingPickupLocation) {
-            pickupLocation = placeName
-            isPickingPickupLocation = false
-        } else if (isPickingDropOffLocation) {
-            dropOffLocation = placeName
-            isPickingDropOffLocation = false
-        }
-    }
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Image(
             painter = painterResource(id = R.drawable.back),
@@ -303,7 +260,7 @@ fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewMo
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-        TopBar(authViewModel,navController)
+        TopBar(authViewModel, navController)
 
         Column(
             modifier = Modifier
@@ -315,8 +272,7 @@ fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewMo
             Image(
                 painter = painterResource(R.drawable.logo),
                 contentDescription = "Logo",
-                modifier = Modifier
-                    .size(100.dp)
+                modifier = Modifier.size(100.dp)
             )
             Text(
                 text = "Tell us more about your move",
@@ -324,23 +280,32 @@ fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewMo
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            OutlinedTextField(
-                value = pickupLocation,
-                onValueChange = { pickupLocation = it },
-                label = { Text("Pickup Location") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            )
 
-            OutlinedTextField(
-                value = dropOffLocation,
-                onValueChange = { dropOffLocation = it },
-                label = { Text("Drop-off Location") },
+            // Pickup Location Button
+            Button(
+                onClick = {
+                    // Launch Google Places Autocomplete for Pickup Location
+                    mainActivity.launchPlaceAutocompletePickup() // Pass the context
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
-            )
+            ) {
+                Text(text = if (pickupLocation.isEmpty()) "Select Pickup Location" else pickupLocation)
+            }
+
+            // Dropoff Location Button
+            Button(
+                onClick = {
+                    // Launch Google Places Autocomplete for Drop-off Location
+                    mainActivity.launchPlaceAutocompleteDropoff() // Pass the context
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                Text(text = if (dropOffLocation.isEmpty()) "Select Drop-off Location" else dropOffLocation)
+            }
 
             CustomDatePicker(
                 selectedDate = selectedDate,
@@ -356,9 +321,10 @@ fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewMo
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
             )
-            val darkGreen = Color(0xFF006400)
+
             Button(
                 onClick = {
+                    // Add validation logic here if needed
                     formViewModel.formSubmit(
                         pickupLocation,
                         dropOffLocation,
@@ -369,24 +335,13 @@ fun MoveDetailsScreen(navController: NavHostController,formViewModel: FormViewMo
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
-                colors = ButtonDefaults.buttonColors( darkGreen, contentColor = Color.White)
-            ){
+                colors = ButtonDefaults.buttonColors(darkGreen, contentColor = Color.White)
+            ) {
                 Text(text = "Continue")
-            }
-
-            if (isPickingPickupLocation || isPickingDropOffLocation) {
-                MapPickerDialog(
-                    onPlaceSelected = onPlaceSelected,
-                    onDismiss = {
-                        isPickingPickupLocation = false
-                        isPickingDropOffLocation = false
-                    }
-                )
             }
         }
     }
 }
-
 
 
 

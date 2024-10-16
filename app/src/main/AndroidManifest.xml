@@ -37,10 +37,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB8mOAUXZJckm4CuPrX6vmRbsY3xRDf1ok" />
 
-        <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

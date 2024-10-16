@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "19321283139",
+    "firebase_url": "https://relocationapp-87e1b-default-rtdb.firebaseio.com",
+    "project_id": "relocationapp-87e1b",
+    "storage_bucket": "relocationapp-87e1b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19321283139:android:80a29b2cf19a447b8c6af6",
+        "android_client_info": {
+          "package_name": "com.example.relocationapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "19321283139-mg5esqqvn7vj0pc67990q6ksq934kghr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.relocationapp",
+            "certificate_hash": "25d7a81c5bfb8c0874d70565ddaaff42309265e1"
+          }
+        },
+        {
+          "client_id": "19321283139-vml0qineeb42a8rtsjp6el4oml3tfi6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8mOAUXZJckm4CuPrX6vmRbsY3xRDf1ok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "19321283139-vml0qineeb42a8rtsjp6el4oml3tfi6g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
